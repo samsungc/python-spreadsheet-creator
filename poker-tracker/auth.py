@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 # no clue what this line does, just keeping it here for now
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 def get_authed():
     '''Gets the user authenticated'''
@@ -33,6 +33,10 @@ def get_authed():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
+    return creds
+
 if __name__ == '__main__':
     get_authed()
+
+    
     
