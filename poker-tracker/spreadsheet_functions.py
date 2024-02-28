@@ -53,6 +53,17 @@ def batch_write_to_sheet(creds, spreadsheet_id, input_option, data):
     except HttpError as error:
         print(f"An error occurred: {error}")
         return error
+    
+def batch_update_sheets(creds, spreadsheet_id, requests):
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+        body = {'requests':requests}
+        res = service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body = body).execute()
+        return res
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return error
 
 
     
@@ -96,6 +107,58 @@ def build_sheet(names):
 
     return data
 
+def build_format(creds, spreadsheet, names):
+    '''
+    builds all of the formatting requests in one go for more efficiency
+    input: names as a list of names
+    output: requests as a dictionary of requests
+    '''
+
+    requests = []
+    alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+    # center align all the cells that are in use
+    requests.append(
+        {
+            "repeatCell":{
+                "range":{
+                    "sheetId":0,
+                    "startRowIndex": 1,
+                    "endRowIndex": 2,
+                    "startColumnIndex": 1,
+                    "endColumnIndex": 26
+                },
+                "cell":{
+                    "userEnteredFormat":{
+                        "numberFormat":{
+                            "type":'CURRENCY'
+                        },
+                    }
+                },
+                "fields": 'userEnteredFormat(numberFormat)'
+            },
+            "repeatCell":{
+                "range":{
+                    "sheetId":0,
+                    "startRowIndex": 0,
+                    "endRowIndex": 100,
+                    "startColumnIndex": 0,
+                    "endColumnIndex": 26
+                },
+                "cell":{
+                    "userEnteredFormat":{
+                        "horizontalAlignment":'CENTER'
+                    }
+                },
+                "fields": 'userEnteredFormat(horizontalAlignment)'
+            }
+
+        }
+    )
+
+
+    return requests
+
 
     
 def format_sheet(creds, spreadsheet, names):
@@ -106,10 +169,15 @@ def format_sheet(creds, spreadsheet, names):
     data = build_sheet(names)
     batch_write_to_sheet(creds, spreadsheet, 'USER_ENTERED', data)
 
+    data = build_format(creds, spreadsheet, names)
+    batch_update_sheets(creds, spreadsheet, data)
+
+
 
 if __name__ == '__main__':
     test = ['samson', 'daniel', 'test', 'L']
     print(build_sheet(test))
+    print(build_format(test))
 
 
 
