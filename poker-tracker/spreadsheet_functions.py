@@ -107,7 +107,7 @@ def build_sheet(names):
 
     return data
 
-def build_format(creds, spreadsheet, names):
+def build_format(names):
     '''
     builds all of the formatting requests in one go for more efficiency
     input: names as a list of names
@@ -117,7 +117,29 @@ def build_format(creds, spreadsheet, names):
     requests = []
     alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-    # center align all the cells that are in use
+    # centre align all cells in use
+    requests.append(
+        {
+            "repeatCell":{
+                "range":{
+                    "sheetId":0,
+                    "startRowIndex": 0,
+                    "endRowIndex": 3 + len(names) + 7,
+                    "startColumnIndex": 0,
+                    "endColumnIndex": 26
+                },
+                "cell":{
+                    "userEnteredFormat":{
+                        "horizontalAlignment":'CENTER'
+                    }
+                },
+                "fields": 'userEnteredFormat(horizontalAlignment)'
+            }
+
+        }
+    )
+
+    # change buy in to be currency
     requests.append(
         {
             "repeatCell":{
@@ -136,25 +158,81 @@ def build_format(creds, spreadsheet, names):
                     }
                 },
                 "fields": 'userEnteredFormat(numberFormat)'
-            },
+            }
+        }
+    )
+
+    # change names to be currency
+    requests.append(
+        {
             "repeatCell":{
                 "range":{
                     "sheetId":0,
-                    "startRowIndex": 0,
-                    "endRowIndex": 100,
-                    "startColumnIndex": 0,
+                    "startRowIndex": 3,
+                    "endRowIndex": 3 + len(names) + 1,
+                    "startColumnIndex": 1,
                     "endColumnIndex": 26
                 },
                 "cell":{
                     "userEnteredFormat":{
-                        "horizontalAlignment":'CENTER'
+                        "numberFormat":{
+                            "type":'CURRENCY'
+                        },
                     }
                 },
-                "fields": 'userEnteredFormat(horizontalAlignment)'
+                "fields": 'userEnteredFormat(numberFormat)'
             }
-
         }
     )
+
+    # change night total to be currency
+    requests.append(
+        {
+            "repeatCell":{
+                "range":{
+                    "sheetId":0,
+                    "startRowIndex": 3 + len(names) + 3,
+                    "endRowIndex": 3 + len(names) + 4,
+                    "startColumnIndex": 1,
+                    "endColumnIndex": 26
+                },
+                "cell":{
+                    "userEnteredFormat":{
+                        "numberFormat":{
+                            "type":'CURRENCY'
+                        },
+                    }
+                },
+                "fields": 'userEnteredFormat(numberFormat)'
+            }
+        }
+    )
+
+    # change night total to be currency
+    requests.append(
+        {
+            "repeatCell":{
+                "range":{
+                    "sheetId":0,
+                    "startRowIndex": 3 + len(names) + 6,
+                    "endRowIndex": 3 + len(names) + 7,
+                    "startColumnIndex": 1,
+                    "endColumnIndex": 26
+                },
+                "cell":{
+                    "userEnteredFormat":{
+                        "numberFormat":{
+                            "type":'CURRENCY'
+                        },
+                    }
+                },
+                "fields": 'userEnteredFormat(numberFormat)'
+            }
+        }
+    )
+
+    
+    
 
 
     return requests
@@ -169,7 +247,7 @@ def format_sheet(creds, spreadsheet, names):
     data = build_sheet(names)
     batch_write_to_sheet(creds, spreadsheet, 'USER_ENTERED', data)
 
-    data = build_format(creds, spreadsheet, names)
+    data = build_format(names)
     batch_update_sheets(creds, spreadsheet, data)
 
 
