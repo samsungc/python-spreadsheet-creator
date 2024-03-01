@@ -9,8 +9,8 @@ import auth as au
 import spreadsheet_functions as sf
 
 # names and title 
-people = ['Samson', 'Ethan H', 'Ethan W', 'Tron Jon', 'Alcohol Jon', 'Ansh', 'Daniel']
-title = 'pokah night feb 24';
+people = ['example 1', 'example 2', 'example 3']
+title = 'title goes here';
 
 '''
 TODO: figure out how to get users to auth themselves

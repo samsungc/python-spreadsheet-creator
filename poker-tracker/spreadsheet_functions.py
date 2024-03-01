@@ -115,7 +115,6 @@ def build_format(names):
     '''
 
     requests = []
-    alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
     # centre align all cells in use
     requests.append(
@@ -231,8 +230,187 @@ def build_format(names):
         }
     )
 
-    
-    
+    # add conditional formatting for buy-in amount
+    requests. append(
+        {
+            "addConditionalFormatRule":{
+                "rule":{
+                    "ranges":[{
+                        "sheetId": 0,
+                        "startRowIndex": 1,
+                        "endRowIndex": 2,
+                        "startColumnIndex": 1,
+                        "endColumnIndex": 26,
+                    }],
+                    "gradientRule":{
+                        "minpoint":{
+                            "colorStyle":{
+                                "rgbColor":{
+                                    "green":1,
+                                    "red":0.9,
+                                    "blue":0.9,
+                                }
+                            },
+                            "type":'MIN'
+                        },
+                        "maxpoint":{
+                            "colorStyle":{
+                                "rgbColor":{
+                                    "red":1,
+                                    "green":0.9,
+                                    "blue":0.9,
+                                }
+                            },
+                            "type":'MAX'
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+    # green if you up
+    requests.append(
+        {
+            "addConditionalFormatRule":{
+                "rule":{
+                    "ranges":[{
+                        "sheetId": 0,
+                        "startRowIndex": 3,
+                        "endRowIndex": 3 + len(names) + 1,
+                        "startColumnIndex": 1,
+                        "endColumnIndex": 26,
+                    }],
+                    "booleanRule":{
+                        "condition":{
+                            "type":'NUMBER_GREATER',
+                            "values":{
+                                'userEnteredValue':'0'
+                            }
+                        },
+                        "format":{
+                            "backgroundColorStyle":{
+                                "rgbColor":{
+                                    "red":0.5,
+                                    "green":1,
+                                    "blue":0.5,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+    # red if you down
+    requests.append(
+        {
+            "addConditionalFormatRule":{
+                "rule":{
+                    "ranges":[{
+                        "sheetId": 0,
+                        "startRowIndex": 3,
+                        "endRowIndex": 3 + len(names) + 1,
+                        "startColumnIndex": 1,
+                        "endColumnIndex": 26,
+                    }],
+                    "booleanRule":{
+                        "condition":{
+                            "type":'NUMBER_LESS',
+                            "values":{
+                                'userEnteredValue':'0'
+                            }
+                        },
+                        "format":{
+                            "backgroundColorStyle":{
+                                "rgbColor":{
+                                    "red":1,
+                                    "green":0.5,
+                                    "blue":0.5,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+    # mark if night total is not equal to 0
+    requests.append(
+        {
+            "addConditionalFormatRule":{
+                "rule":{
+                    "ranges":[{
+                        "sheetId": 0,
+                        "startRowIndex": 3 + len(names) + 3,
+                        "endRowIndex": 3 + len(names) + 4,
+                        "startColumnIndex": 1,
+                        "endColumnIndex": 26,
+                    }],
+                    "booleanRule":{
+                        "condition":{
+                            "type":'NUMBER_NOT_EQ',
+                            "values":{
+                                'userEnteredValue':'0'
+                            }
+                        },
+                        "format":{
+                            "backgroundColorStyle":{
+                                "rgbColor":{
+                                    "red":1,
+                                    "green":0.9,
+                                    "blue":0.9,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+    # conditional formatting for totals
+    requests. append(
+        {
+            "addConditionalFormatRule":{
+                "rule":{
+                    "ranges":[{
+                        "sheetId": 0,
+                        "startRowIndex": 3 + len(names) + 6,
+                        "endRowIndex": 3 + len(names) + 7,
+                        "startColumnIndex": 1,
+                        "endColumnIndex": 26,
+                    }],
+                    "gradientRule":{
+                        "maxpoint":{
+                            "colorStyle":{
+                                "rgbColor":{
+                                    "green":1,
+                                    "red":0.75,
+                                    "blue":0.75,
+                                }
+                            },
+                            "type":'MAX'
+                        },
+                        "minpoint":{
+                            "colorStyle":{
+                                "rgbColor":{
+                                    "red":1,
+                                    "green":0.75,
+                                    "blue":0.75,
+                                }
+                            },
+                            "type":'MIN'
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+
 
 
     return requests
