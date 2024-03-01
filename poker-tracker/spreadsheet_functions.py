@@ -94,7 +94,7 @@ def build_sheet(names):
     for letter in alpha:
         if letter == 'A':
             continue
-        res.append(f'=sum({letter}4:{letter}{4 + len(names) - 1})')
+        res.append(f'=sum({letter}4:{letter}{4 + len(names)})')
     data[2]['values'] = [res]
 
     # putting in the formulas for the total
@@ -291,9 +291,9 @@ def build_format(names):
                         "format":{
                             "backgroundColorStyle":{
                                 "rgbColor":{
-                                    "red":0.5,
+                                    "red":0.75,
                                     "green":1,
-                                    "blue":0.5,
+                                    "blue":0.75,
                                 }
                             }
                         }
@@ -326,8 +326,8 @@ def build_format(names):
                             "backgroundColorStyle":{
                                 "rgbColor":{
                                     "red":1,
-                                    "green":0.5,
-                                    "blue":0.5,
+                                    "green":0.75,
+                                    "blue":0.75,
                                 }
                             }
                         }
@@ -337,39 +337,40 @@ def build_format(names):
         }
     )
 
-    # mark if night total is not equal to 0
-    requests.append(
-        {
-            "addConditionalFormatRule":{
-                "rule":{
-                    "ranges":[{
-                        "sheetId": 0,
-                        "startRowIndex": 3 + len(names) + 3,
-                        "endRowIndex": 3 + len(names) + 4,
-                        "startColumnIndex": 1,
-                        "endColumnIndex": 26,
-                    }],
-                    "booleanRule":{
-                        "condition":{
-                            "type":'NUMBER_NOT_EQ',
-                            "values":{
-                                'userEnteredValue':'0'
-                            }
-                        },
-                        "format":{
-                            "backgroundColorStyle":{
-                                "rgbColor":{
-                                    "red":1,
-                                    "green":0.9,
-                                    "blue":0.9,
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    )
+    # feature removed because spreadsheet has weird error
+    # # mark if night total is not equal to 0
+    # requests.append(
+    #     {
+    #         "addConditionalFormatRule":{
+    #             "rule":{
+    #                 "ranges":[{
+    #                     "sheetId": 0,
+    #                     "startRowIndex": 3 + len(names) + 3,
+    #                     "endRowIndex": 3 + len(names) + 4,
+    #                     "startColumnIndex": 1,
+    #                     "endColumnIndex": 26,
+    #                 }],
+    #                 "booleanRule":{
+    #                     "condition":{
+    #                         "type":'NUMBER_NOT_EQ',
+    #                         "values":{
+    #                             'userEnteredValue':'0'
+    #                         }
+    #                     },
+    #                     "format":{
+    #                         "backgroundColorStyle":{
+    #                             "rgbColor":{
+    #                                 "red":1,
+    #                                 "green":0.9,
+    #                                 "blue":0.9,
+    #                             }
+    #                         }
+    #                     }
+    #                 }
+    #             }
+    #         }
+    #     }
+    # )
 
     # conditional formatting for totals
     requests. append(
